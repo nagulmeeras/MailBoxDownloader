@@ -18,6 +18,12 @@ public class DataBean {
 	 */
 	public String mailbox_type;
 
+	public DataBean(int month , int year , byte[] content , String mailbox_type){
+		this.month = month;
+		this.year = year;
+		this.content = content;
+		this.mailbox_type = mailbox_type;
+	}
 	public int getMonth() {
 		return month;
 	}

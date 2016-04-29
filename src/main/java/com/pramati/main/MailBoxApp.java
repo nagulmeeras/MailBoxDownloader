@@ -49,33 +49,21 @@ public class MailBoxApp {
 			logger.info("getting urls...");
 			Map<String, Integer> urlsToDownload = scrapper.getUrlsByYear();
 			OperationsDao fileDaoObject = new FileOperationsDaoImpl();
-			Properties mysqlProperties = FileUtils.getProperties("src/main/resources/mysql.properties");
-			OperationsDao dbDaoObject = new DbOperationsDaoImpl(mysqlProperties);
+			//Properties mysqlProperties = FileUtils.getProperties("src/main/resources/mysql.properties");
+			//OperationsDao dbDaoObject = new DbOperationsDaoImpl(mysqlProperties);
 			Map<String, byte[]> sharedContent = new ConcurrentHashMap<String, byte[]>();
-
-			ExecutorService executorService = Executors.newFixedThreadPool(6);
-			CountDownLatch latch = new CountDownLatch(urlsToDownload.size());
-			for (String url : urlsToDownload.keySet()) {
-				Downloader downloader = new ContentDownloaderImpl(url, sharedContent, latch);
-				executorService.execute(downloader);
-			}
-			executorService.shutdown();
-			latch.await();
-
+			ExecutorPool executorPool = new ExecutorPool(urlsToDownload , sharedContent);
+			executorPool.executePool();
 			logger.info("SIZE:" + sharedContent.size());
 			for (String url : sharedContent.keySet()) {
 				String mailbox_type = url.substring(url.indexOf("mod_mbox") + 9, url.indexOf(yearToFetch) - 1);
-				DataBean bean = new DataBean();
-				bean.setContent(sharedContent.get(url));
-				bean.setMonth(urlsToDownload.get(url));
-				bean.setYear(Integer.parseInt(yearToFetch));
-				bean.setMailbox_type(mailbox_type);
+				DataBean bean = new DataBean(urlsToDownload.get(url) , Integer.parseInt(yearToFetch) , sharedContent.get(url),mailbox_type);;
 				logger.info(bean.getMonth() + "\n" + bean.getYear());
 				String fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
 				fileDaoObject.saveData(bean, fileName);
 				// dbDaoObject.saveData(bean, "");
 			}
-			dbDaoObject.closeConnection();
+			//dbDaoObject.closeConnection();
 			logger.info("Downloading done...");
 		} catch (Exception e) {
 			e.printStackTrace();
