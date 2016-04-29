@@ -1,0 +1,13 @@
+com/pramati/scrapper/Downloader.class
+com/pramati/bean/DataBean.class
+com/pramati/util/ScrapeUtils.class
+com/pramati/scrapper/ContentDownloaderImpl.class
+com/pramati/dao/FileOperationsDaoImpl.class
+com/pramati/scrapper/Scrapper.class
+com/pramati/dao/DbOperationsDaoImpl.class
+com/pramati/main/ExecutorPool.class
+com/pramati/util/FileUtils.class
+com/pramati/scrapper/RunnableDownloader.class
+com/pramati/main/MailBoxApp.class
+com/pramati/scrapper/UrlScrapperImpl.class
+com/pramati/dao/OperationsDao.class
