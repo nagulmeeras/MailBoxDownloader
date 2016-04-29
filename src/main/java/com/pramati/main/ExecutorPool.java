@@ -5,8 +5,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.pramati.scrapper.ContentDownloaderImpl;
-import com.pramati.scrapper.Downloader;
+import com.pramati.scrapper.RunnableDownloader;
 
 public class ExecutorPool {
 	public Map<String , byte[]> sharedContent;
@@ -20,8 +19,8 @@ public class ExecutorPool {
 		ExecutorService executorService = Executors.newFixedThreadPool(6);
 		CountDownLatch latch = new CountDownLatch(mapOfTasks.size());
 		for (String url : mapOfTasks.keySet()) {
-			Downloader downloader = new ContentDownloaderImpl(url, sharedContent, latch);
-			executorService.execute(downloader);
+			RunnableDownloader runnableDownloader = new RunnableDownloader(url, sharedContent, latch);
+			executorService.execute(runnableDownloader);
 		}
 		executorService.shutdown();
 		latch.await();

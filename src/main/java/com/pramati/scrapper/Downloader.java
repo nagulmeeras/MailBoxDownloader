@@ -1,6 +1,6 @@
 package com.pramati.scrapper;
 
-public interface Downloader extends Runnable {
+public interface Downloader {
 	/*
 	 * @attribute String url fully qualified url for downloading the content
 	 * @return byte[] stream of content which is downloaded
